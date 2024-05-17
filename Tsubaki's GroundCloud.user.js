@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Tsubaki's GroundCloud
 // @namespace    https://github.com/trevorftp
-// @version      0.0.6a
+// @version      0.0.6b
 // @description  Redesign GroundCloud.io
 // @author       Trevor Derifield
 // @match        https://groundcloud.io/*
 // @run-at       document-body
-// @downloadURL  https://github.com/trevorftp/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
-// @updateURL	   https://github.com/trevorftp/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
+// @downloadURL  https://github.com/thewholejones/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
+// @updateURL	   https://github.com/thewholejones/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
 // ==/UserScript==
 
     /* Copyright (C) 2024 Trevor Derifield
