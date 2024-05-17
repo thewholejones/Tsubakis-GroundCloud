@@ -5,6 +5,7 @@
 // @description  Redesign GroundCloud.io
 // @author       Trevor Derifield
 // @match        https://groundcloud.io/*
+// @match        https://www.groundcloud.io/*
 // @run-at       document-body
 // @downloadURL  https://github.com/thewholejones/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
 // @updateURL	   https://github.com/thewholejones/Tsubakis-GroundCloud/raw/main/Tsubaki's%20GroundCloud.user.js
@@ -352,6 +353,19 @@
         }
     }
 
+    function removeAlert(alertText) {
+        // Get all elements with the class 'alert'
+        const alerts = document.querySelectorAll('.alert');
+
+        // Iterate through each alert to find the one that contains the given text
+        alerts.forEach(alert => {
+            if (alert.textContent.trim().includes(alertText)) {
+                // Remove the alert element from the DOM if the text matches
+                alert.remove();
+            }
+        });
+    }
+
     function detectTerminalSelect() {
         if (overview) {
             let tselect = overview.$children.find(child => child.$options.name === 'TerminalSelect');
@@ -370,7 +384,7 @@
         // Get the elements to move
         let topbarDiv = document.querySelector('.topbar');
         let dashboardDiv = document.querySelector('.dashboard');
-        let sidebarToggleBtn;
+        let sidebarToggleBtn, sidebarToggleContainer;
 
         // hehe.
         document.querySelector('.nav-item.nav-item__upgrade_to_pro_tier').remove();
@@ -397,10 +411,20 @@
                     dashhead.insertBefore(logoDiv, dashhead.firstChild);
                 }
                 if (!sidebarToggleBtn) {
+                    // Create the new div element
+                    sidebarToggleContainer = document.createElement('div');
+                    sidebarToggleContainer.classList.add('sidebar-toggle-container');
+
+                    // Create the button
                     sidebarToggleBtn = document.createElement('button');
                     sidebarToggleBtn.classList.add('sidebar-toggle-button');
                     sidebarToggleBtn.ariaLabel = 'Toggle Sidebar';
-                    dashhead.insertBefore(sidebarToggleBtn, dashhead.firstChild);
+
+                    // Append the button to the div
+                    sidebarToggleContainer.appendChild(sidebarToggleBtn);
+
+                    // Insert the new div into the dashhead, before the first child
+                    dashhead.insertBefore(sidebarToggleContainer, dashhead.firstChild);
                 }
             }
 
@@ -413,7 +437,7 @@
             wrapper.style.paddingLeft = '0px';
             sidebarWrapper.style.width = '0px';
 
-            sidebarToggleBtn.addEventListener('click', function() {
+            sidebarToggleContainer.addEventListener('click', function() {
                 let newWrapperPadding = wrapperStyle.paddingLeft === '250px' ? '0px' : '250px';
                 let newSidebarWidth = sidebarWrapperStyle.width === '250px' ? '0px' : '250px';
 
@@ -502,6 +526,10 @@
               background-color: #ffffff00;
               font-weight: 500;
           }
+          .sidebar-toggle-container {
+              cursor: pointer;
+              padding: 5px 5px 10px 5px;
+          }
           .sidebar-toggle-button {
               background-color: transparent;
               border: none;
@@ -553,6 +581,9 @@
           }
           .dashhead-titles {
               order: 3;
+          }
+          #fleet-map-pane {
+              height: 500px !important;
           }
         `;
         document.head.appendChild(style);
@@ -915,11 +946,17 @@
     })(XMLHttpRequest.prototype.open);
 
     document.addEventListener('DOMContentLoaded', function() {
+        addCustomCSS();
+
         // Add a short delay to ensure elements are fully loaded
         setTimeout(function() {
             if (checkPage('dashboard')) {
                 setupVue('#overview_viewapp');
-                notification("Tsubaki's GroundCloud - Version 0.0.6a - Report any issues on Github.", "#0D0A05", "#000000", "#0D0A05", "#0D0A05");
+
+                removeAlert("Devices have unassigned vehicles");
+                removeAlert("Devices have not checked in for the last 3 days");
+                removeAlert("One or more of today's routes contains a bad address");
+
                 createServiceCard();
                 editTableData();
                 detectTerminalSelect();
@@ -934,8 +971,6 @@
                 //setupVue('#route_details_viewapp');
                 //setTimeout(routePage, 1000);
             }
-
-            addCustomCSS();
         }, 1200);
     });
 // ==/Event Listeners==
